@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupie Tracker</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/styl.css">
+    <style>
+        .filter-item {
+            font-size: 18px;
+            width: 40%;
+            border-radius: 20px;
+            padding: 10px;
+            background-color: rgba(14, 14, 14, 0.5);
+            color: white;
+            margin-left: 30%;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Groupie Tracker</h1>
+    </header>
+    <br>
+
+    <main>
+        <div class="selec">
+            <select id="artistCountSelect">
+                <option value="1">10</option>
+                <option value="2">20</option>
+                <option value="3">30</option>
+                <option value="4">All</option>
+            </select>
+        </div>
+        <div class="filter-container">
+            <input class="name" type="text" id="nameFilter" placeholder="Filter by Name">
+            <input class="location" type="text" id="locationFilter" placeholder="Filter by Location">
+            <input class="album" type="text" id="albumFilter" placeholder="Filter by First Album">
+            <input class="date" type="text" id="dateFilter" placeholder="Filter by creation date">
+        </div>
+
+        <div id="artistList">
+            {{ range . }}
+            <div class="artist-card" data-name="{{ .Name }}" data-location="{{ .Locations }}"
+                data-album="{{ .FirstAlbum }}" data-date="{{ .CreationDate }}">
+                <a href="/Artist?id={{ .Id }}">
+                    <img src="{{ .Image }}" alt="Artist Image">
+                    <h2>{{ .Name }}</h2>
+                </a>
+            </div>
+            {{ end }}
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Groupie Tracker. All rights reserved to Zone01 Oujda.</p>
+            <a href="/about"> About Us</a>
+        </div>
+    </footer>
+
+    <script>
+        const nameFilter = document.getElementById('nameFilter');
+        const locationFilter = document.getElementById('locationFilter');
+        const albumFilter = document.getElementById('albumFilter');
+        const dateFilter = document.getElementById('dateFilter');
+        const artistCards = document.querySelectorAll('.artist-card');
+
+        function filterArtists() {
+            const nameValue = nameFilter.value.toLowerCase();
+            const locationValue = locationFilter.value.toLowerCase();
+            const albumValue = albumFilter.value.toLowerCase();
+            const dateValue = dateFilter.value.toLowerCase();
+
+
+            artistCards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const location = card.getAttribute('data-location').toLowerCase();
+                const album = card.getAttribute('data-album').toLowerCase();
+                const date = card.getAttribute('data-date').toLowerCase();
+
+
+                const matchesName = name.includes(nameValue);
+                const matchesLocation = location.includes(locationValue);
+                const matchesAlbum = album.includes(albumValue);
+                const matchesdate = album.includes(dateValue);
+                nameFilter.addEventListener('input', filterArtists);
+
+
+                // Show or hide the card based on filter criteria
+                if (matchesName && matchesLocation && matchesAlbum && matchesdate) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add event listeners for input fields
+        nameFilter.addEventListener('input', filterArtists);
+        locationFilter.addEventListener('input', filterArtists);
+        albumFilter.addEventListener('input', filterArtists);
+        dateFilter.addEventListener('input', filterArtists);
+
+    </script>
+
+</body>
+
+</html>
